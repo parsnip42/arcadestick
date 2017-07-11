@@ -1,22 +1,3 @@
-/*********************************************************************
- This is an example for our nRF51822 based Bluefruit LE modules
-
- Pick one up today in the adafruit shop!
-
- Adafruit invests time and resources providing this open source code,
- please support Adafruit and open-source hardware by purchasing
- products from Adafruit!
-
- MIT license, check LICENSE for more information
- All text above, and the splash screen below must be included in
- any redistribution
-*********************************************************************/
-
-/*
-  This example shows how to send HID (keyboard/mouse/etc) data via BLE
-  Note that not all devices support BLE keyboard! BLE Keyboard != Bluetooth Keyboard
-*/
-
 #include <Arduino.h>
 #include <SPI.h>
 #if not defined (_VARIANT_ARDUINO_DUE_X_) && not defined(ARDUINO_ARCH_SAMD)
@@ -42,7 +23,23 @@ const Button buttons[] =
     { 18, 0x50 },
     { 19, 0x4f },
     { 20, 0x51 },
-    { 21, 0x52 }
+    { 21, 0x52 },
+
+    { 22, 0x2b },
+    { 23, 0x13 },
+
+    { 0, 0x1e },
+    { 1, 0x22 },
+
+    { 12, 0x4 },
+    { 11, 0x16 },
+    { 10, 0x7 },
+    { 9, 0x9 },
+
+    { 6, 0x1d },
+    { 5, 0x1b },
+    { 3, 0x6 },
+    { 2, 0x19 }
 };
 
 const size_t buttonCount = sizeof(buttons) / sizeof(*buttons);
