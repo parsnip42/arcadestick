@@ -16,30 +16,31 @@ struct Button
 {
     int pin;
     byte hidCode;
+    byte altHidCode;
 };
 
 const Button buttons[] =
 {
-    { 18, 0x50 },
-    { 19, 0x4f },
-    { 20, 0x51 },
-    { 21, 0x52 },
+    { 18, 0x52, 0x52 }, // Up
+    { 19, 0x51, 0x51 }, // Down
+    { 20, 0x50, 0x50 }, // Left
+    { 21, 0x4f, 0x4f }, // Right
 
-    { 22, 0x2b },
-    { 23, 0x13 },
+    //{ 22, 0x2b }, // Tab
+    { 23, 0x13, 0x13 }, // P
 
-    { 0, 0x1e },
-    { 1, 0x22 },
+    { 0, 0x1e, 0x29 }, // 1 / Esc
+    { 1, 0x22, 0x22 }, // 5 / Esc
 
-    { 12, 0x4 },
-    { 11, 0x16 },
-    { 10, 0x7 },
-    { 9, 0x9 },
+    { 12, 0x4, 0x2b }, // A / Tab
+    { 11, 0x16, 0x16 }, // S
+    { 10, 0x7, 0x7 }, // D
+    { 9, 0x9, 0x9 }, // F
 
-    { 6, 0x1d },
-    { 5, 0x1b },
-    { 3, 0x6 },
-    { 2, 0x19 }
+    { 6, 0x1d, 0x1d }, // Z
+    { 5, 0x1b, 0x1b }, // X
+    { 3, 0x6, 0x6 }, // C
+    { 2, 0x19, 0x19 } // V
 };
 
 const size_t buttonCount = sizeof(buttons) / sizeof(*buttons);
@@ -47,6 +48,7 @@ const size_t buttonCount = sizeof(buttons) / sizeof(*buttons);
 uint32_t lastMask = 0;
 
 int led = 13;
+int altPin = 22;
 
 void setup(void)
 {
@@ -71,6 +73,9 @@ void setup(void)
         digitalWrite(buttonPin, HIGH);
     }
 
+    pinMode(altPin, INPUT);
+    digitalWrite(altPin, HIGH);
+    
     digitalWrite(led, LOW);
 }
 
@@ -79,6 +84,8 @@ void loop(void)
     uint32_t buttonMask = 0;
     byte keys[6] = { 0 };
     int keyCount = 0;
+
+    bool altKey = !digitalRead(altPin);
     
     for (int i = 0; i < buttonCount; ++i)
     {
@@ -91,7 +98,7 @@ void loop(void)
 
         if (state && keyCount < 6)
         {
-            keys[keyCount++] = button.hidCode;
+            keys[keyCount++] = !altKey ? button.hidCode : button.altHidCode;
         }
     }
 
