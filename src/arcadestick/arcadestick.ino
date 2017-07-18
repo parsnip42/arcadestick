@@ -26,21 +26,20 @@ const Button buttons[] =
     { 20, 0x50, 0x50 }, // Left
     { 21, 0x4f, 0x4f }, // Right
 
-    //{ 22, 0x2b }, // Tab
-    { 23, 0x13, 0x13 }, // P
+    { 23, 0x13, 0x0 }, // P
 
-    { 0, 0x1e, 0x29 }, // 1 / Esc
-    { 1, 0x22, 0x22 }, // 5 / Esc
+    { 0, 0x1e, 0x0 }, // 1
+    { 1, 0x22, 0x0 }, // 5
 
     { 12, 0x28, 0x2b }, // Enter / Tab
-    { 11, 0x16, 0x16 }, // S
-    { 10, 0x7, 0x7 }, // D
-    { 9, 0x9, 0x9 }, // F
+    { 11, 0x16, 0x29 }, // S / Esc
+    { 10, 0x7, 0x0 }, // D
+    { 9, 0x9, 0x0 }, // F
 
-    { 6, 0x1d, 0x1d }, // Z
-    { 5, 0x1b, 0x1b }, // X
-    { 3, 0x6, 0x6 }, // C
-    { 2, 0x19, 0x19 } // V
+    { 6, 0x1d, 0x0 }, // Z
+    { 5, 0x1b, 0x0 }, // X
+    { 3, 0x6, 0x0 }, // C
+    { 2, 0x19, 0x0 } // V
 };
 
 const size_t buttonCount = sizeof(buttons) / sizeof(*buttons);
@@ -98,13 +97,22 @@ void loop(void)
 
         if (state && keyCount < 6)
         {
-            keys[keyCount++] = !altKey ? button.hidCode : button.altHidCode;
+            int code = !altKey ? button.hidCode : button.altHidCode;
+
+            if (code)
+            {
+              keys[keyCount++] = code;
+            }
         }
     }
 
     if (lastMask != buttonMask)
     {
-        if (buttonMask)
+        if (altKey && (buttonMask == ((1 << 5) | (1 << 1))))
+        {
+            ble.println(F("AT+BLEKEYBOARDCODE=04-00-3d"));
+        }
+        else if (buttonMask)
         {
             char atStr[64];
             
